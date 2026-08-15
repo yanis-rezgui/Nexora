@@ -1,0 +1,25 @@
+services:
+  # PostgreSQL database for Nexora
+  nexora_db:
+    image: postgres:15-alpine
+    container_name: nexora_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: yanis_dev
+      POSTGRES_PASSWORD: my_local_password123
+      POSTGRES_DB: nexora_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - nexora_postgres_data:/var/lib/postgresql/data
+    networks:
+      - nexora_network
+
+# Persistent PostgreSQL data
+volumes:
+  nexora_postgres_data:
+
+# Isolated network for Nexora
+networks:
+  nexora_network:
+    driver: bridge
