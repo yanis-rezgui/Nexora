@@ -5,6 +5,12 @@ import { PORT } from "./config/env.js";
 import { test } from "./test.js";
 import authRouter from "./routes/auth.routes.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
+import projectRouter from "./routes/project.routes.js";
+import memberRouter from "./routes/member.routes.js";
+import taskRouter from "./routes/task.routes.js";
+import notificationRouter from "./routes/notification.routes.js";
+import dashboardRouter from "./routes/dashboard.routes.js";
+import settingsRouter from "./routes/settings.routes.js";
 
 const app = express()
 
@@ -20,6 +26,12 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
 app.use("/api/v1/auth", authRouter);
+app.use('/api/v1/projects', projectRouter);
+app.use("/api/v1", memberRouter)
+app.use("/api/v1", taskRouter)
+app.use("/api/v1", notificationRouter);
+app.use("/api/v1", dashboardRouter);
+app.use("/api/v1", settingsRouter);
 
 app.use(errorMiddleware);
 
@@ -31,7 +43,7 @@ const startServer = async() => {
             await test();
        });
     }catch(err){
-        console.error(err);
+        console.error(err); 
     }
 }
 

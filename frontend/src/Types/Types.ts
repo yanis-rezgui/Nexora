@@ -18,11 +18,7 @@ export type TaskPriority =
   | "HIGH"
   | "URGENT";
 
-export type NotificationType =
-  | "INFO"
-  | "SUCCESS"
-  | "WARNING"
-  | "ERROR";
+
 
 export type ActivityAction =
   | "CREATED"
@@ -200,22 +196,44 @@ export interface TaskLabel {
 // NOTIFICATION
 // ============================================================
 
+export type NotificationType =
+  | "INFO"
+  | "SUCCESS"
+  | "WARNING"
+  | "ERROR"
+  | "MEMBER_ADDED"
+  | "MEMBER_REMOVED"
+  | "TASK_ASSIGNED"
+  | "TASK_UNASSIGNED"
+  | "TASK_STATUS_CHANGED"
+  | "TASK_DUE_SOON"
+  | "TASK_OVERDUE"
+  | "COMMENT_ADDED"
+  | "COMMENT_MENTION";
+
 export interface Notification {
   id: string;
 
   userId: string;
+  type: NotificationType;
 
   title: string;
   message: string;
 
-  type: NotificationType;
+  projectId: string | null;
+  taskId: string | null;
+  actorId: string | null;
 
   isRead: boolean;
+  readAt: string | null;
 
   createdAt: string;
   updatedAt: string;
-}
 
+  actor?: Pick<User, "id" | "firstName" | "lastName"> | null;
+  project?: Pick<Project, "id" | "name"> | null;
+  task?: Pick<Task, "id" | "title"> | null;
+}
 
 // ============================================================
 // ACTIVITY LOG
@@ -321,4 +339,109 @@ export interface TaskDetails extends Task {
   attachments?: Attachment[];
 
   labels?: TaskLabel[];
+}
+
+// ============================================================
+// PAGINATION
+// ============================================================
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+
+// ============================================================
+// PROJECT LIST ITEM (returned by GET /projects)
+// ============================================================
+
+export interface ProjectListItem extends Project {
+  role: "OWNER" | ProjectRole;
+  taskCount: number;
+  memberCount: number;
+}
+
+
+// ============================================================
+// PROJECT DETAILS (returned by GET /projects/:id)
+// ============================================================
+
+export interface ProjectDetailsResponse extends Project {
+  role: "OWNER" | ProjectRole;
+  taskCount: number;
+  members: ProjectMember[];
+}
+
+
+// ============================================================
+// MY TASKS (task + parent project info)
+// ============================================================
+
+export interface MyTask extends Task {
+  project: Pick<Project, "id" | "name">;
+}
+
+export interface TaskStatusCounts {
+  TODO: number;
+  IN_PROGRESS: number;
+  IN_REVIEW: number;
+  DONE: number;
+}
+
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+
+export interface DashboardStats {
+  total: number;
+  inProgress: number;
+  completed: number;
+  overdue: number;
+}
+
+export interface DashboardTask extends Task {
+  project: Pick<Project, "id" | "name">;
+}
+
+export interface DashboardProject {
+  id: string;
+  name: string;
+  role: "OWNER" | ProjectRole;
+  taskCount: number;
+  completedTaskCount: number;
+  completionPercent: number;
+  memberCount: number;
+}
+
+export interface DashboardActivityLog extends ActivityLog {
+  project: Pick<Project, "id" | "name">;
+  user: Pick<User, "id" | "firstName" | "lastName">;
+}
+
+export interface TeamWorkloadEntry {
+  user: Pick<User, "id" | "firstName" | "lastName">;
+  activeTaskCount: number;
+}
+
+export interface DashboardOverview {
+  stats: DashboardStats;
+  myTasks: DashboardTask[];
+  recentActivity: DashboardActivityLog[];
+  projects: DashboardProject[];
+  teamWorkload: TeamWorkloadEntry[];
+  isManager: boolean;
+}
+
+
+export interface NotificationPreferences {
+  notifyTaskAssigned: boolean;
+  notifyTaskUpdated: boolean;
+  notifyComments: boolean;
+  notifyMentions: boolean;
+  notifyProjectActivity: boolean;
+  notifyDeadlines: boolean;
+  notifyEmail: boolean;
 }

@@ -26,6 +26,14 @@ model User {
   updatedAt            DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // Relations
+
+    notifyTaskAssigned    Boolean  @default(true)  @map("notify_task_assigned")
+  notifyTaskUpdated     Boolean  @default(true)  @map("notify_task_updated")
+  notifyComments        Boolean  @default(true)  @map("notify_comments")
+  notifyMentions        Boolean  @default(true)  @map("notify_mentions")
+  notifyProjectActivity Boolean  @default(false) @map("notify_project_activity")
+  notifyDeadlines       Boolean  @default(true)  @map("notify_deadlines")
+  notifyEmail           Boolean  @default(false) @map("notify_email")
   ownedProjects        Project[]
   projectMemberships   ProjectMember[]
   assignedTasks        Task[]             @relation("TaskAssignee")
@@ -35,6 +43,9 @@ model User {
   notifications        Notification[]
   activityLogs         ActivityLog[]
   refreshTokens        RefreshToken[]
+
+  
+  triggeredNotifications Notification[] @relation("NotificationActor")
 
   @@map("users")
 }
@@ -59,6 +70,7 @@ model Project {
   tasks       Task[]
   labels      Label[]
   activityLogs ActivityLog[]
+  notifications Notification[]
 
   @@index([ownerId])
   @@map("projects")
@@ -120,6 +132,7 @@ model Task {
   comments    Comment[]
   attachments Attachment[]
   labels      TaskLabel[]
+  notifications Notification[]
 
   @@index([projectId])
   @@index([assigneeId])
@@ -232,23 +245,33 @@ model TaskLabel {
 // ============================================================
 
 model Notification {
-  id        String           @id @default(uuid())
-  userId    String           @map("user_id")
+  id         String           @id @default(uuid())
+  userId     String           @map("user_id")
 
-  title     String           @db.VarChar(150)
-  message   String
-  type      NotificationType
+  type       NotificationType
 
-  isRead    Boolean          @default(false) @map("is_read")
+  title      String           @db.VarChar(150)
+  message    String
 
-  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  projectId  String?          @map("project_id")
+  taskId     String?          @map("task_id")
+  actorId    String?          @map("actor_id")
+
+  isRead     Boolean          @default(false) @map("is_read")
+  readAt     DateTime?        @map("read_at") @db.Timestamptz(6)
+
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // Relations
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  actor      User?            @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  project    Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  task       Task?            @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([isRead])
+  @@index([userId, isRead])
 
   @@map("notifications")
 }
@@ -341,10 +364,26 @@ enum TaskPriority {
 
 
 enum NotificationType {
+  // Generic fallback
   INFO
   SUCCESS
   WARNING
   ERROR
+
+  // Members
+  MEMBER_ADDED
+  MEMBER_REMOVED
+
+  // Tasks
+  TASK_ASSIGNED
+  TASK_UNASSIGNED
+  TASK_STATUS_CHANGED
+  TASK_DUE_SOON
+  TASK_OVERDUE
+
+  // Comments (prêt pour plus tard)
+  COMMENT_ADDED
+  COMMENT_MENTION
 }
 
 

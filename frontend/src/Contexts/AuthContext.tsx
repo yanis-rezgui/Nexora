@@ -3,7 +3,6 @@ import type { User } from "../Types/Types";
 
 
 
-
 interface AuthContextType{
     user : User | null
     login : (email : string, password : string)=>Promise<void>;
@@ -13,6 +12,8 @@ interface AuthContextType{
     signOut : ()=>Promise<void>
     loadingSignOut : boolean;
     errorMsg :string | null;
+    getUser : ()=>Promise<void>;
+    loadingUser : boolean;
 
 }
 
@@ -27,6 +28,7 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
     });
 
     const [errorMsg, setErrorMsg] = useState<string | null>(null)
+    const [loadingUser, setLoadingUser] = useState<boolean>(false);
 
     const [loadingLogin, setLoadingLogin] = useState<boolean>(false);
     const [loadingSignUp, setLoadingSignUp] = useState<boolean>(false);
@@ -104,12 +106,12 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
         try{
 
             setLoadingSignOut(true);
-            const res = await fetch("http://localhost:5000/api/v1/auth/signOut", {
+            const res = await fetch("http://localhost:5000/api/v1/auth/logout", {
                 method : "POST",
                 headers : {
                     "Content-Type" : "application/json"
                 },
-                credentials :"include"
+                credentials : "include"
             });
 
             const data = await res.json();
@@ -131,6 +133,32 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
     }
 
 
+    const getUser = async() => {
+
+        try{
+
+            setLoadingUser(true);
+
+            const res = await fetch("http://localhost:5000/api/v1/auth/me", {
+                method : "GET",
+                credentials : "include"
+            });
+
+            const data = await res.json();
+
+            if(!res.ok){
+                throw new Error(data.error || data.message || "Error in getting user");
+            }
+
+            setUser(data.data);
+            
+        }catch(err){
+            console.error(err);
+        }finally{
+            setLoadingUser(false);
+        }
+    }
+
     return <AuthContext.Provider value={{
         user,
             login,
@@ -140,6 +168,8 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
     signOut ,
     loadingSignOut,
     errorMsg ,
+    loadingUser,
+    getUser
     }}>
         {children}
     </AuthContext.Provider>

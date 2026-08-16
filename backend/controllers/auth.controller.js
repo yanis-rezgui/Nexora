@@ -14,7 +14,7 @@ import {
 
 
 
-const generateTokens = (userId) => {
+export const generateTokens = (userId) => {
   const accessToken = jwt.sign(
     { id: userId },
     ACCESS_TOKEN_SECRET,
@@ -39,7 +39,7 @@ const generateTokens = (userId) => {
 
 
 
-const setCookies = (res, accessToken, refreshToken) => {
+export const setCookies = (res, accessToken, refreshToken) => {
   const cookieOptions = {
     httpOnly: true,
     secure: NODE_ENV === "production",
@@ -376,3 +376,41 @@ export const signOut = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
+export const getUser = async(req, res, next) => {
+
+  try{
+
+    const user = req.user;
+
+    if(!user){
+      return res.status(404).json({
+        success : false,
+        message : "Error user not found"
+      });
+    }
+
+        const userResponse = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    return res.status(200).json(
+      {
+        success : true,
+        message : "user found",
+        data : userResponse
+      }
+    )
+  }catch(err){
+    next(err);
+  }
+
+}

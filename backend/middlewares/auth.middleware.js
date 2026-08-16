@@ -3,7 +3,8 @@ import prisma from "../config/prisma.js";
 import {
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET,
-  NODE_ENV
+  NODE_ENV,
+  ACCESS_TOKEN_EXPIRATION
 } from "../config/env.js";
 
 const authorize = async (req, res, next) => {
@@ -141,7 +142,7 @@ const authorize = async (req, res, next) => {
       },
       ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "15m"
+        expiresIn: ACCESS_TOKEN_EXPIRATION
       }
     );
 
