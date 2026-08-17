@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import type { ApiResponse, NotificationPreferences, User } from "../Types/Types";
+import { useAuthContext } from "./AuthContext";
 
 interface SettingsContextType {
   updateProfile: (firstName: string, lastName: string) => Promise<User | null>;
@@ -41,6 +42,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const {getUser} = useAuthContext();
 
   const clearMessages = () => {
     setErrorMsg(null);
@@ -69,7 +71,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
 
       setSuccessMsg("Profile updated successfully");
       setErrorMsg(null);
-      return data.data.user;
+      await getUser();
 
     } catch (err) {
       console.error(err);

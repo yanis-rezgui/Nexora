@@ -383,7 +383,14 @@ export const getUser = async(req, res, next) => {
 
   try{
 
-    const user = req.user;
+    
+    const userId = req.user.id;
+
+    const user = await prisma.user.findUnique({
+      where : {
+        id :userId
+      }
+    })
 
     if(!user){
       return res.status(404).json({
