@@ -62,9 +62,14 @@ export const getProjectMembers = async (req, res, next) => {
     // Get project members
     // ------------------------------------------------------------
 
+    // ------------------------------------------------------------
+    // Get project members
+    // ------------------------------------------------------------
+
     const members = await prisma.projectMember.findMany({
       where: {
         projectId,
+        userId: { not: project.ownerId }, // ← exclut le owner, il est ajouté manuellement plus bas
       },
       include: {
         user: {

@@ -11,8 +11,18 @@ import taskRouter from "./routes/task.routes.js";
 import notificationRouter from "./routes/notification.routes.js";
 import dashboardRouter from "./routes/dashboard.routes.js";
 import settingsRouter from "./routes/settings.routes.js";
+import { Server } from "socket.io";
+import { createServer } from "http";
+import { initializeSocket } from "./socket/socket.js";
+import helmet from "helmet"
 
 const app = express()
+
+const server = createServer(app)
+
+initializeSocket(server)
+
+app.use(helmet())
 
 app.use(cors({
         origin : [
@@ -38,7 +48,7 @@ app.use(errorMiddleware);
 const startServer = async() => {
     try{
         console.log("Trying to connect to database : ");
-        app.listen(PORT, async()=>{ // <-- httpServer, plus app
+        server.listen(PORT, async()=>{ // <-- httpServer, plus app
             console.log(`App running on : http://localhost:${PORT}`);
             await test();
        });

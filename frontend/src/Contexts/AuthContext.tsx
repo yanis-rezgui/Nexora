@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { User } from "../Types/Types";
-
+import {socket} from "../socket/socket.js"
 
 
 interface AuthContextType{
@@ -157,7 +157,18 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
         }finally{
             setLoadingUser(false);
         }
+    } 
+
+
+        useEffect(() => {
+
+    if(user){
+        socket.connect();
+    }else{
+        socket.disconnect();
     }
+
+}, [user]);
 
     return <AuthContext.Provider value={{
         user,

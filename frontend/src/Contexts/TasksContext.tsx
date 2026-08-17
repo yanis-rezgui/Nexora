@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type {
   ApiResponse,
   Pagination,
@@ -9,6 +9,7 @@ import type {
   MyTask,
   TaskStatusCounts,
 } from "../Types/Types";
+import { socket } from "../socket/socket.js";
 
 
 // ============================================================
@@ -220,6 +221,10 @@ export const TasksProvider = ({
   const [errorMsg, setErrorMsg] =
     useState<string | null>(null);
 
+  // Room projet actuellement rejointe (pour join/leave propre)
+  const [currentProjectRoom, setCurrentProjectRoom] =
+    useState<string | null>(null);
+
 
   // ==========================================================
   // GET PROJECT TASKS
@@ -261,6 +266,14 @@ export const TasksProvider = ({
       setTasks(data.data.tasks);
 
       setErrorMsg(null);
+
+      // Rejoindre la room socket du projet (et quitter l'ancienne si besoin)
+      if (currentProjectRoom && currentProjectRoom !== projectId) {
+        socket.emit("project:leave", currentProjectRoom);
+      }
+
+      socket.emit("project:join", projectId);
+      setCurrentProjectRoom(projectId);
 
     } catch (err) {
 
@@ -387,10 +400,11 @@ export const TasksProvider = ({
       }
 
 
-      setTasks(prev => [
-        data.data!.task,
-        ...prev,
-      ]);
+      setTasks(prev =>
+        prev.some(task => task.id === data.data!.task.id)
+          ? prev
+          : [data.data!.task, ...prev]
+      );
 
 
       setErrorMsg(null);
@@ -801,6 +815,145 @@ export const TasksProvider = ({
 
     }
   };
+
+
+  // ==========================================================
+  // SOCKET LISTENERS (temps réel)
+  // ==========================================================
+
+  useEffect(() => {
+
+    // --------------------------------------------------------
+    // TASK CREATED
+    // --------------------------------------------------------
+
+    const handleTaskCreated = ({ task }: { projectId: string; task: Task }) => {
+
+      setTasks(prev =>
+        prev.some(t => t.id === task.id)
+          ? prev
+          : [task, ...prev]
+      );
+    };
+
+
+    // --------------------------------------------------------
+    // TASK UPDATED
+    // --------------------------------------------------------
+
+    const handleTaskUpdated = ({ task }: { projectId: string; task: Task }) => {
+
+      setTasks(prev =>
+        prev.map(t =>
+          t.id === task.id ? { ...t, ...task } : t
+        )
+      );
+
+      setMyTasks(prev =>
+        prev.map(t =>
+          t.id === task.id ? { ...t, ...task } : t
+        )
+      );
+
+      setCurrentTask(prev =>
+        prev && prev.id === task.id
+          ? { ...prev, ...task }
+          : prev
+      );
+    };
+
+
+    // --------------------------------------------------------
+    // TASK DELETED
+    // --------------------------------------------------------
+
+    const handleTaskDeleted = ({ taskId }: { projectId: string; taskId: string }) => {
+
+      setTasks(prev =>
+        prev.filter(t => t.id !== taskId)
+      );
+
+      setMyTasks(prev =>
+        prev.filter(t => t.id !== taskId)
+      );
+
+      setCurrentTask(prev =>
+        prev && prev.id === taskId ? null : prev
+      );
+    };
+
+
+    // --------------------------------------------------------
+    // TASK ASSIGNED / UNASSIGNED
+    // --------------------------------------------------------
+
+    const handleTaskAssignedOrUnassigned = ({ task }: { projectId: string; task: Task }) => {
+
+      setTasks(prev =>
+        prev.map(t =>
+          t.id === task.id ? { ...t, ...task } : t
+        )
+      );
+
+      setMyTasks(prev =>
+        prev.some(t => t.id === task.id)
+          ? prev.map(t =>
+              t.id === task.id ? { ...t, ...task } : t
+            )
+          : prev
+      );
+
+      setCurrentTask(prev =>
+        prev && prev.id === task.id
+          ? { ...prev, ...task }
+          : prev
+      );
+    };
+
+
+    // --------------------------------------------------------
+    // TASK STATUS UPDATED
+    // --------------------------------------------------------
+
+    const handleTaskStatusUpdated = ({ task }: { projectId: string; task: Task }) => {
+
+      setTasks(prev =>
+        prev.map(t =>
+          t.id === task.id ? { ...t, ...task } : t
+        )
+      );
+
+      setMyTasks(prev =>
+        prev.map(t =>
+          t.id === task.id ? { ...t, ...task } : t
+        )
+      );
+
+      setCurrentTask(prev =>
+        prev && prev.id === task.id
+          ? { ...prev, ...task }
+          : prev
+      );
+    };
+
+
+    socket.on("task:created", handleTaskCreated);
+    socket.on("task:updated", handleTaskUpdated);
+    socket.on("task:deleted", handleTaskDeleted);
+    socket.on("task:assigned", handleTaskAssignedOrUnassigned);
+    socket.on("task:unassigned", handleTaskAssignedOrUnassigned);
+    socket.on("task:status_updated", handleTaskStatusUpdated);
+
+    return () => {
+      socket.off("task:created", handleTaskCreated);
+      socket.off("task:updated", handleTaskUpdated);
+      socket.off("task:deleted", handleTaskDeleted);
+      socket.off("task:assigned", handleTaskAssignedOrUnassigned);
+      socket.off("task:unassigned", handleTaskAssignedOrUnassigned);
+      socket.off("task:status_updated", handleTaskStatusUpdated);
+    };
+
+  }, []);
 
 
   // ==========================================================

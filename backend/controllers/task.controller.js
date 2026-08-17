@@ -4,6 +4,7 @@ import {
   createTaskUnassignedNotification,
   createTaskStatusNotification,
 } from "../services/notificationService.js";
+import { getIo } from "../socket/socket.js";
 
 // ============================================================
 // HELPERS
@@ -281,6 +282,23 @@ export const createTask = async (req, res, next) => {
     });
 
 
+    // --------------------------------------------------------
+    // EMIT
+    // --------------------------------------------------------
+
+    getIo().to(`project_${projectId}`).emit("task:created", {
+      projectId,
+      task,
+    });
+
+    if (task.assigneeId) {
+      getIo().to(`user_${task.assigneeId}`).emit("task:created", {
+        projectId,
+        task,
+      });
+    }
+
+
     return res.status(201).json({
       success: true,
       message: "Task created successfully",
@@ -543,6 +561,23 @@ export const updateTask = async (req, res, next) => {
     });
 
 
+    // --------------------------------------------------------
+    // EMIT
+    // --------------------------------------------------------
+
+    getIo().to(`project_${projectId}`).emit("task:updated", {
+      projectId,
+      task,
+    });
+
+    if (task.assigneeId) {
+      getIo().to(`user_${task.assigneeId}`).emit("task:updated", {
+        projectId,
+        task,
+      });
+    }
+
+
     return res.status(200).json({
       success: true,
       message: "Task updated successfully",
@@ -630,6 +665,23 @@ export const deleteTask = async (req, res, next) => {
         id: taskId,
       },
     });
+
+
+    // --------------------------------------------------------
+    // EMIT
+    // --------------------------------------------------------
+
+    getIo().to(`project_${projectId}`).emit("task:deleted", {
+      projectId,
+      taskId,
+    });
+
+    if (task.assigneeId) {
+      getIo().to(`user_${task.assigneeId}`).emit("task:deleted", {
+        projectId,
+        taskId,
+      });
+    }
 
 
     return res.status(200).json({
@@ -743,6 +795,22 @@ export const assignTask = async (req, res, next) => {
       });
     }
 
+    // --------------------------------------------------------
+    // EMIT
+    // --------------------------------------------------------
+
+    getIo().to(`project_${projectId}`).emit("task:unassigned", {
+      projectId,
+      task: updatedTask,
+    });
+
+    if (task.assigneeId) {
+      getIo().to(`user_${task.assigneeId}`).emit("task:unassigned", {
+        projectId,
+        task: updatedTask,
+      });
+    }
+
       return res.status(200).json({
         success: true,
         message: "Task unassigned successfully",
@@ -809,6 +877,20 @@ export const assignTask = async (req, res, next) => {
       taskTitle: updatedTask.title,
       assigneeId,
       actor: req.user,
+    });
+
+    // --------------------------------------------------------
+    // EMIT
+    // --------------------------------------------------------
+
+    getIo().to(`project_${projectId}`).emit("task:assigned", {
+      projectId,
+      task: updatedTask,
+    });
+
+    getIo().to(`user_${assigneeId}`).emit("task:assigned", {
+      projectId,
+      task: updatedTask,
     });
 
     return res.status(200).json({
@@ -939,6 +1021,39 @@ export const updateTaskStatus = async (req, res, next) => {
         },
       },
     });
+
+
+    // --------------------------------------------------------
+    // NOTIFY
+    // --------------------------------------------------------
+
+    if (updatedTask.assigneeId && updatedTask.assigneeId !== userId) {
+      await createTaskStatusNotification({
+        projectId,
+        taskId,
+        taskTitle: updatedTask.title,
+        newStatus: status,
+        assigneeId: updatedTask.assigneeId,
+        actor: req.user,
+      });
+    }
+
+
+    // --------------------------------------------------------
+    // EMIT
+    // --------------------------------------------------------
+
+    getIo().to(`project_${projectId}`).emit("task:status_updated", {
+      projectId,
+      task: updatedTask,
+    });
+
+    if (updatedTask.assigneeId) {
+      getIo().to(`user_${updatedTask.assigneeId}`).emit("task:status_updated", {
+        projectId,
+        task: updatedTask,
+      });
+    }
 
 
     return res.status(200).json({
