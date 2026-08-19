@@ -445,3 +445,96 @@ export interface NotificationPreferences {
   notifyDeadlines: boolean;
   notifyEmail: boolean;
 }
+
+export interface AdminDashboardStats {
+  totalUsers: number;
+  activeUsers: number;
+  totalProjects: number;
+  totalTasks: number;
+  completedTasks: number;
+  overdueTasks: number;
+}
+
+export interface AdminDashboardOverview {
+  stats: AdminDashboardStats;
+  recentActivity: ActivityLog[];
+}
+
+export interface AdminUserListItem {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+  projectCount: number;
+  taskCount: number;
+}
+
+export interface AdminUserDetails {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  projectCount: number;
+  taskCounts: TaskStatusCounts;
+  activeSessionCount: number;
+}
+
+export interface AdminSession {
+  id: string;
+  createdAt: string;
+  expiresAt: string;
+}
+
+export interface AdminProjectListItem {
+  id: string;
+  name: string;
+  owner: Pick<User, "id" | "firstName" | "lastName" | "email">;
+  memberCount: number;
+  taskCount: number;
+  completedTaskCount: number;
+  completionPercent: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectDeletionImpact {
+  project: Pick<Project, "id" | "name">;
+  impact: {
+    taskCount: number;
+    memberCount: number;
+    commentCount: number;
+    attachmentCount: number;
+  };
+}
+
+export interface AdminTaskListItem extends Task {
+  project: Pick<Project, "id" | "name">;
+  assignee?: Pick<User, "id" | "firstName" | "lastName">;
+}
+
+export interface UserGrowthPoint {
+  month: string;
+  count: number;
+}
+
+export interface MostActiveUserEntry {
+  user: Pick<User, "id" | "firstName" | "lastName">;
+  taskCount: number;
+}
+
+export interface AdminAnalytics {
+  userGrowth: UserGrowthPoint[];
+  taskCompletion: {
+    thisWeek: number;
+    lastWeek: number;
+    percentChange: number | null;
+  };
+  mostActiveUsers: MostActiveUserEntry[];
+}

@@ -90,6 +90,15 @@ export const signIn = async (req, res, next) => {
       },
     });
 
+    // Dans signIn, juste après avoir vérifié isValidPassword
+
+    if (!existingUser.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: "This account has been suspended",
+      });
+    }
+
     // Don't reveal whether the email exists
     if (!existingUser) {
       return res.status(401).json({

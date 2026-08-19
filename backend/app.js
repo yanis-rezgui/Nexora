@@ -43,6 +43,7 @@ app.use("/api/v1", notificationRouter);
 app.use("/api/v1", dashboardRouter);
 app.use("/api/v1", settingsRouter);
 
+
 app.use(errorMiddleware);
 
 const startServer = async() => {
