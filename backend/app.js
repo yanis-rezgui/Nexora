@@ -15,6 +15,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { initializeSocket } from "./socket/socket.js";
 import helmet from "helmet"
+import adminRouter from "./routes/admin.routes.js";
 
 const app = express()
 
@@ -42,6 +43,7 @@ app.use("/api/v1", taskRouter)
 app.use("/api/v1", notificationRouter);
 app.use("/api/v1", dashboardRouter);
 app.use("/api/v1", settingsRouter);
+app.use("/api/v1", adminRouter)
 
 
 app.use(errorMiddleware);

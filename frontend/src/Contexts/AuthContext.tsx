@@ -159,6 +159,9 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
         }
     } 
 
+    useEffect(()=>{
+        getUser();
+    } ,[])
 
         useEffect(() => {
 

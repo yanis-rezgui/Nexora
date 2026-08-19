@@ -23,6 +23,10 @@ import { DashboardProvider } from './Contexts/DashboardContext'
 import Dashboard from './Pages/Dashboard'
 import { SettingsProvider } from './Contexts/SettingsContext'
 import Settings from './Pages/Settings'
+import AdminDashboard from './Pages/AdminDashboard'
+import { AdminProvider } from './Contexts/AdminContext'
+import AdminUsers from './Pages/AdminUsers'
+import Guide from './Pages/Guide'
 
 function App() {
 
@@ -38,6 +42,7 @@ function App() {
               <NotificationsProvider>
                 <DashboardProvider>
                   <SettingsProvider>
+                    <AdminProvider>
       <Routes>
 
         <Route element={
@@ -74,12 +79,16 @@ function App() {
            <Route path='tasks' element={<Tasks/>}/>
            <Route path='notifications' element={<Notifications/>}/>
             <Route path='settings' element={<Settings/>}/>
+            <Route path='admin/dashboard' element={<AdminDashboard/>}/>
+            <Route path='admin/users' element={<AdminUsers/>}/>
+            <Route path='guide' element={<Guide/>}/>
          
       </Route>
 
       
       </Routes>
 
+          </AdminProvider>
          </SettingsProvider>
       </DashboardProvider>
       </NotificationsProvider>

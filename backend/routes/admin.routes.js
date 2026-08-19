@@ -20,26 +20,26 @@ import {
   getAllTasksAdmin,
 } from "../controllers/admin.controller.js";
 
-const router = Router();
+const adminRouter = Router();
 
 // Toutes les routes admin exigent d'être connecté ET d'avoir le rôle ADMIN
-router.use(authorize, isAdmin);
+adminRouter.use(authorize, isAdmin);
 
-router.get("/admin/dashboard", getAdminDashboardStats);
-router.get("/admin/analytics", getAdminAnalytics);
+adminRouter.get("/admin/dashboard", getAdminDashboardStats);
+adminRouter.get("/admin/analytics", getAdminAnalytics);
 
-router.get("/admin/users", getAllUsers);
-router.get("/admin/users/:userId", getUserByIdAdmin);
-router.patch("/admin/users/:userId/role", updateUserRole);
-router.patch("/admin/users/:userId/suspend", suspendUser);
-router.patch("/admin/users/:userId/unsuspend", unsuspendUser);
-router.get("/admin/users/:userId/sessions", getUserSessions);
-router.delete("/admin/users/:userId/sessions", revokeUserSessions);
+adminRouter.get("/admin/users", getAllUsers);
+adminRouter.get("/admin/users/:userId", getUserByIdAdmin);
+adminRouter.patch("/admin/users/:userId/role", updateUserRole);
+adminRouter.patch("/admin/users/:userId/suspend", suspendUser);
+adminRouter.patch("/admin/users/:userId/unsuspend", unsuspendUser);
+adminRouter.get("/admin/users/:userId/sessions", getUserSessions);
+adminRouter.delete("/admin/users/:userId/sessions", revokeUserSessions);
 
-router.get("/admin/projects", getAllProjectsAdmin);
-router.get("/admin/projects/:projectId/deletion-impact", getProjectDeletionImpact);
-router.delete("/admin/projects/:projectId", deleteProjectAdmin);
+adminRouter.get("/admin/projects", getAllProjectsAdmin);
+adminRouter.get("/admin/projects/:projectId/deletion-impact", getProjectDeletionImpact);
+adminRouter.delete("/admin/projects/:projectId", deleteProjectAdmin);
 
-router.get("/admin/tasks", getAllTasksAdmin);
+adminRouter.get("/admin/tasks", getAllTasksAdmin);
 
-export default router;
+export default adminRouter;

@@ -14,6 +14,7 @@ interface NavItem {
   icon: string;
   path: string;
   badge?: number;
+  adminOnly?: boolean;
 }
 
 const navMain: NavItem[] = [
@@ -21,11 +22,19 @@ const navMain: NavItem[] = [
   { label: "Projects", icon: "ti-folder", path: "/user/projects" },
   { label: "My Tasks", icon: "ti-checklist", path: "/user/tasks" },
   { label: "Notifications", icon: "ti-bell", path: "/user/notifications" },
+  { 
+  label: "How it works",
+  icon: "ti-book-2",
+  path: "/user/guide"
+}
 ];
 
 const navAccount: NavItem[] = [
   { label: "Settings", icon: "ti-settings", path: "/user/settings" },
+  {label : "Admin Dashboard", icon : "ti-dashboard", path: "/user/admin/dashboard", adminOnly : true},
+  {label : "Users Gestionnary", icon : "ti-users", path : "/user/admin/users", adminOnly : true}
 ];
+
 
 const Sidebar = ({ open, onNavigate }: SidebarProps) => {
   const navigate = useNavigate();
@@ -35,7 +44,7 @@ const Sidebar = ({ open, onNavigate }: SidebarProps) => {
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "?";
-
+  
   const handleNav = (path: string) => {
     navigate(path);
     onNavigate?.();
@@ -139,7 +148,11 @@ const Sidebar = ({ open, onNavigate }: SidebarProps) => {
             </div>
 
             <p style={{ ...sectionLabel, marginTop: 20 }}>Account</p>
-            {navAccount.map(item => <NavRow key={item.path} {...item} />)}
+            {navAccount
+  .filter(item => !item.adminOnly || user?.role === "ADMIN")
+  .map(item => (
+    <NavRow key={item.path} {...item} />
+  ))}
 
             {/* Footer */}
             <div style={{ marginTop: "auto", padding: "12px 8px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
