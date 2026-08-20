@@ -14,6 +14,11 @@ interface AuthContextType{
     errorMsg :string | null;
     getUser : ()=>Promise<void>;
     loadingUser : boolean;
+    forgotPassword : (email: string) => Promise<boolean>;
+    loadingForgotPassword : boolean;
+
+    resetPassword : (token: string, password: string, confirmPassword: string) => Promise<boolean>;
+    loadingResetPassword : boolean;
 
 }
 
@@ -33,6 +38,9 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
     const [loadingLogin, setLoadingLogin] = useState<boolean>(false);
     const [loadingSignUp, setLoadingSignUp] = useState<boolean>(false);
     const [loadingSignOut, setLoadingSignOut] = useState<boolean>(false);
+
+    const [loadingForgotPassword, setLoadingForgotPassword] = useState<boolean>(false);
+const [loadingResetPassword, setLoadingResetPassword] = useState<boolean>(false);
 
     useEffect(()=>{
         localStorage.setItem('user', JSON.stringify(user))
@@ -159,6 +167,72 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
         }
     } 
 
+
+    const forgotPassword = async (email: string): Promise<boolean> => {
+
+    try {
+        setLoadingForgotPassword(true);
+
+        const res = await fetch("http://localhost:5000/api/v1/auth/forgot-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+            credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            setErrorMsg(data.error || data.message || "Error in sending reset email");
+            throw new Error(data.error || data.message || "Error in sending reset email");
+        }
+
+        setErrorMsg(null);
+        return true;
+
+    } catch (err) {
+        console.error(err);
+        return false;
+    } finally {
+        setLoadingForgotPassword(false);
+    }
+};
+
+
+const resetPassword = async (
+    token: string,
+    password: string,
+    confirmPassword: string
+): Promise<boolean> => {
+
+    try {
+        setLoadingResetPassword(true);
+
+        const res = await fetch("http://localhost:5000/api/v1/auth/reset-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token, password, confirmPassword }),
+            credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            setErrorMsg(data.error || data.message || "Error in resetting password");
+            throw new Error(data.error || data.message || "Error in resetting password");
+        }
+
+        setErrorMsg(null);
+        return true;
+
+    } catch (err) {
+        console.error(err);
+        return false;
+    } finally {
+        setLoadingResetPassword(false);
+    }
+};
+
     useEffect(()=>{
         getUser();
     } ,[])
@@ -183,7 +257,11 @@ export const AuthProvider = ({children} : {children : React.ReactNode}) => {
     loadingSignOut,
     errorMsg ,
     loadingUser,
-    getUser
+    getUser,
+        forgotPassword,
+    loadingForgotPassword,
+    resetPassword,
+    loadingResetPassword,
     }}>
         {children}
     </AuthContext.Provider>

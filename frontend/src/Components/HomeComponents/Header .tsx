@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const NAV_LINKS = [
     { label: "Product",      href: "#preview" },
@@ -77,8 +78,8 @@ const Header = () => {
 
             {/* CTA desktop */}
             <div className="max-[900px]:hidden flex items-center gap-5">
-                <a
-                    href="/login"
+                <Link
+                    to="/login"
                     style={{
                         color: "#8D897E", fontSize: 13.5, fontWeight: 500,
                         textDecoration: "none", transition: "color 0.2s",
@@ -87,9 +88,9 @@ const Header = () => {
                     onMouseLeave={e => (e.currentTarget.style.color = "#8D897E")}
                 >
                     Log in
-                </a>
-                <a
-                    href="/register"
+                </Link>
+                <Link
+                    to="/register"
                     style={{
                         background: "#E8A33D", color: "#151116", fontSize: 13, fontWeight: 600,
                         padding: "8px 17px", borderRadius: 7, textDecoration: "none",
@@ -105,7 +106,7 @@ const Header = () => {
                     }}
                 >
                     Get started
-                </a>
+                </Link>
             </div>
 
             {/* Burger mobile */}

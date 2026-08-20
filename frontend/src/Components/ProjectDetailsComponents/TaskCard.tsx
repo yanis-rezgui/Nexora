@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useTasksContext } from "../../Contexts/TasksContext";
 import type { Task } from "../../Types/Types";
 import TaskDetailsModal from "./TaskDetailsModal";
+import LabelChip from "../Shared/LabelChip";
 
 
 const PRIORITY_STYLE: Record<string, string> = {
@@ -70,6 +71,21 @@ const TaskCard = ({ task, index = 0, projectId, role }: Props) => {
                 {new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
               </span>
             )}
+
+            {(task._count?.comments ?? 0) > 0 && (
+  <span style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: "'JetBrains Mono', monospace", fontSize: 10.5, color: "#5B5850" }}>
+    <i className="ti ti-message-circle" style={{ fontSize: 11 }} aria-hidden="true" />
+    {task._count!.comments}
+  </span>
+)}
+
+           {task.labels && task.labels.length > 0 && (
+  <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 8 }}>
+    {task.labels.map(tl => (
+      <LabelChip key={tl.id} name={tl.label!.name} color={tl.label!.color} small />
+    ))}
+  </div>
+)}
           </div>
         </div>
       </motion.div>

@@ -6,6 +6,9 @@ import { useTasksContext } from "../../Contexts/TasksContext";
 import { useMembersContext } from "../../Contexts/MembersContext";
 import type { TaskStatus } from "../../Types/Types";
 import ConfirmDeleteModal from "../ProjectsComponents/ConfirmDeleteModal";
+import TaskComments from "./TaskComments";
+import { useLabelsContext } from "../../Contexts/LabelsContext";
+import LabelChip from "../Shared/LabelChip";
 
 interface Props {
   open: boolean;
@@ -34,6 +37,20 @@ const TaskDetailsModal = ({ open, onClose, taskId, projectId, role }: Props) => 
     setConfirmOpen(false);
     onClose();
   };
+
+  const { projectLabels, getProjectLabels, taskLabels, getTaskLabels, attachLabelToTask, detachLabelFromTask } = useLabelsContext();
+
+useEffect(() => {
+  if (open) getProjectLabels(projectId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [open, projectId]);
+
+useEffect(() => {
+  if (currentTask && currentTask.id === taskId) {
+    getTaskLabels(taskId, currentTask.labels ?? []);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [currentTask?.id]);
 
   return createPortal(
     <AnimatePresence>
@@ -107,6 +124,38 @@ const TaskDetailsModal = ({ open, onClose, taskId, projectId, role }: Props) => 
                   <span>Created by {currentTask.creator?.firstName}</span>
                   {currentTask.dueDate && <span>Due {new Date(currentTask.dueDate).toLocaleDateString()}</span>}
                 </div>
+
+                <div style={{ marginBottom: 20 }}>
+  <label style={labelStyle}>Labels</label>
+  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+    {projectLabels.length === 0 && (
+      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "#5B5850" }}>
+        No labels in this project yet.
+      </span>
+    )}
+    {projectLabels.map(label => {
+      const isAttached = taskLabels.some(tl => tl.labelId === label.id);
+      return (
+        <LabelChip
+          key={label.id}
+          name={label.name}
+          color={label.color}
+          active={isAttached}
+          onClick={
+            canManage
+              ? () => isAttached
+                  ? detachLabelFromTask(taskId, label.id)
+                  : attachLabelToTask(taskId, label.id)
+              : undefined
+          }
+        />
+      );
+    })}
+  </div>
+</div>
+
+
+                <TaskComments taskId={taskId} canModerate={canManage} />
               </>
             )}
           </motion.div>

@@ -121,6 +121,10 @@ export interface Task {
   comments?: Comment[];
   attachments?: Attachment[];
   labels?: TaskLabel[];
+    _count?: {
+    comments: number;
+    attachments: number;
+  };
 }
 
 

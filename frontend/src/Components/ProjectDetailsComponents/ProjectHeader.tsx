@@ -5,7 +5,7 @@ import { useProjectsContext } from "../../Contexts/ProjectsContext";
 import type { ProjectDetailsResponse } from "../../Types/Types";
 import ConfirmDeleteModal from "../ProjectsComponents/ConfirmDeleteModal";
 import EditProjectModal from "./EditProjectModal";
-
+import ManageLabelsModal from "./ManageLabelsModal";
 
 const ROLE_STYLE: Record<string, { color: string; bg: string; border: string }> = {
   OWNER:     { color: "#E8A33D", bg: "rgba(232,163,61,0.12)", border: "rgba(232,163,61,0.35)" },
@@ -22,6 +22,7 @@ const ProjectHeader = ({ project }: { project: ProjectDetailsResponse }) => {
   const roleStyle = ROLE_STYLE[project.role] ?? ROLE_STYLE.DEVELOPER;
   const canManage = project.role === "OWNER" || project.role === "MANAGER";
   const canDelete = project.role === "OWNER";
+const [labelsOpen, setLabelsOpen] = useState(false);
 
   const handleDelete = async () => {
     await deleteProject(project.id);
@@ -56,37 +57,54 @@ const ProjectHeader = ({ project }: { project: ProjectDetailsResponse }) => {
           </p>
         </div>
 
-        {canManage && (
-          <div className="max-[560px]:!w-full" style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-            <button
-              onClick={() => setEditOpen(true)}
-              className="max-[560px]:!flex-1"
-              style={{
-                display: "flex", alignItems: "center", gap: 6, padding: "8px 14px",
-                background: "transparent", border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: 8, color: "#C9C5B9", fontFamily: "'Inter', sans-serif",
-                fontSize: 12.5, fontWeight: 500, cursor: "pointer", whiteSpace: "nowrap",
-              }}
-            >
-              <i className="ti ti-edit" style={{ fontSize: 14 }} aria-hidden="true" />
-              Edit
-            </button>
-            {canDelete && (
-              <button
-                onClick={() => setDeleteOpen(true)}
-                style={{
-                  width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "transparent", border: "1px solid rgba(232,101,79,0.25)",
-                  borderRadius: 8, color: "#E8654F", cursor: "pointer", flexShrink: 0,
-                }}
-                aria-label="Delete project"
-              >
-                <i className="ti ti-trash" style={{ fontSize: 15 }} aria-hidden="true" />
-              </button>
-            )}
-          </div>
-        )}
+{canManage && (
+  <div className="max-[560px]:!w-full" style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+    <button
+      onClick={() => setLabelsOpen(true)}
+      className="max-[560px]:!flex-1"
+      style={{
+        display: "flex", alignItems: "center", gap: 6, padding: "8px 14px",
+        background: "transparent", border: "1px solid rgba(255,255,255,0.12)",
+        borderRadius: 8, color: "#C9C5B9", fontFamily: "'Inter', sans-serif",
+        fontSize: 12.5, fontWeight: 500, cursor: "pointer", whiteSpace: "nowrap",
+      }}
+    >
+      <i className="ti ti-tag" style={{ fontSize: 14 }} aria-hidden="true" />
+      Labels
+    </button>
+
+    <button
+      onClick={() => setEditOpen(true)}
+      className="max-[560px]:!flex-1"
+      style={{
+        display: "flex", alignItems: "center", gap: 6, padding: "8px 14px",
+        background: "transparent", border: "1px solid rgba(255,255,255,0.12)",
+        borderRadius: 8, color: "#C9C5B9", fontFamily: "'Inter', sans-serif",
+        fontSize: 12.5, fontWeight: 500, cursor: "pointer", whiteSpace: "nowrap",
+      }}
+    >
+      <i className="ti ti-edit" style={{ fontSize: 14 }} aria-hidden="true" />
+      Edit
+    </button>
+    {canDelete && (
+      <button
+        onClick={() => setDeleteOpen(true)}
+        style={{
+          width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center",
+          background: "transparent", border: "1px solid rgba(232,101,79,0.25)",
+          borderRadius: 8, color: "#E8654F", cursor: "pointer", flexShrink: 0,
+        }}
+        aria-label="Delete project"
+      >
+        <i className="ti ti-trash" style={{ fontSize: 15 }} aria-hidden="true" />
+      </button>
+    )}
+  </div>
+)}
+        
       </div>
+
+      <ManageLabelsModal open={labelsOpen} onClose={() => setLabelsOpen(false)} projectId={project.id} />
 
       <EditProjectModal open={editOpen} onClose={() => setEditOpen(false)} project={project} />
       <ConfirmDeleteModal

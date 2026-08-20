@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30">
+  <defs>
+    <!-- Dégradé à 135° -->
+    <linearGradient id="nexora-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8A33D" />
+      <stop offset="100%" stop-color="#F2C368" />
+    </linearGradient>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&amp;display=swap');
+      
+      .icon-text {
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        fill: #151116;
+      }
+    </style>
+  </defs>
+
+  <!-- Carré 30x30 avec rayon de bordure de 8px -->
+  <rect width="30" height="30" rx="8" fill="url(#nexora-grad)" />
+
+  <!-- Lettre N parfaitement centrée -->
+  <text x="50%" y="50%" class="icon-text" dominant-baseline="central" text-anchor="middle">N</text>
+</svg>

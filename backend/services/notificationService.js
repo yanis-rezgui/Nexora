@@ -1,5 +1,6 @@
 // services/notificationService.js
 import prisma from "../config/prisma.js";
+import { getIo } from "../socket/socket.js";
 import { getNotificationTitle, getNotificationMessage } from "../utils/notificationUtils.js";
 
 
@@ -267,24 +268,85 @@ export const createCommentNotification = async ({
 };
 
 
+
+
+
+// À ajouter dans ton services/notificationService.js existant
+// (assure-toi que prisma et getIo y sont déjà importés)
+
+export const createCommentAddedNotification = async ({
+  projectId,
+  taskId,
+  taskTitle,
+  commentAuthorId,
+  actor,
+}) => {
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    select: { assigneeId: true, creatorId: true },
+  });
+
+  if (!task) return;
+
+  const recipientIds = new Set(
+    [task.assigneeId, task.creatorId].filter(
+      (id) => id && id !== commentAuthorId
+    )
+  );
+
+  if (recipientIds.size === 0) return;
+
+  const notifications = await prisma.$transaction(
+    Array.from(recipientIds).map((userId) =>
+      prisma.notification.create({
+        data: {
+          userId,
+          type: "COMMENT_ADDED",
+          title: "Nouveau commentaire",
+          message: `${actor.firstName} ${actor.lastName} a commenté "${taskTitle}"`,
+          projectId,
+          taskId,
+          actorId: actor.id,
+        },
+      })
+    )
+  );
+
+  notifications.forEach((notification) => {
+    getIo().to(`user_${notification.userId}`).emit("notification:new", notification);
+  });
+};
+
+
 export const createCommentMentionNotification = async ({
   projectId,
   taskId,
   taskTitle,
-  mentionedUserId,
+  mentionedUserIds,
+  commentAuthorId,
   actor,
 }) => {
+  const recipientIds = mentionedUserIds.filter((id) => id !== commentAuthorId);
 
-  return createNotification({
-    userId: mentionedUserId,
-    type: "COMMENT_MENTION",
-    title: getNotificationTitle("COMMENT_MENTION"),
-    message: getNotificationMessage("COMMENT_MENTION", {
-      actorName: `${actor.firstName} ${actor.lastName}`,
-      taskTitle,
-    }),
-    projectId,
-    taskId,
-    actorId: actor.id,
+  if (!recipientIds.length) return;
+
+  const notifications = await prisma.$transaction(
+    recipientIds.map((userId) =>
+      prisma.notification.create({
+        data: {
+          userId,
+          type: "COMMENT_MENTION",
+          title: "Vous avez été mentionné",
+          message: `${actor.firstName} ${actor.lastName} vous a mentionné dans "${taskTitle}"`,
+          projectId,
+          taskId,
+          actorId: actor.id,
+        },
+      })
+    )
+  );
+
+  notifications.forEach((notification) => {
+    getIo().to(`user_${notification.userId}`).emit("notification:new", notification);
   });
 };

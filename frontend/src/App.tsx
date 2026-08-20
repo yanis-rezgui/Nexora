@@ -27,6 +27,13 @@ import AdminDashboard from './Pages/AdminDashboard'
 import { AdminProvider } from './Contexts/AdminContext'
 import AdminUsers from './Pages/AdminUsers'
 import Guide from './Pages/Guide'
+import { CommentsProvider } from './Contexts/CommentsContext'
+import { LabelsProvider } from './Contexts/LabelsContext'
+import ForgotPassword from './Pages/ForgotPassword'
+import ResetPassword from './Pages/ResetPassword'
+import Terms from './Pages/Terms'
+import Privacy from './Pages/Privacy'
+import ScrollToTop from './ScrollToTop'
 
 function App() {
 
@@ -43,6 +50,10 @@ function App() {
                 <DashboardProvider>
                   <SettingsProvider>
                     <AdminProvider>
+                      <CommentsProvider>
+                        <LabelsProvider>
+
+                          <ScrollToTop/>
       <Routes>
 
         <Route element={
@@ -60,7 +71,11 @@ function App() {
 
          <Route path='/login' element={<Login/>}/>
          <Route path='/register' element={<Register/>}/>
-         
+
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+         <Route path='/reset-password/:token' element={<ResetPassword />} />
+         <Route path='/terms' element={<Terms/>}/>
+         <Route path='/privacy' element={<Privacy/>}/>
 
         </Route>
 
@@ -88,6 +103,8 @@ function App() {
       
       </Routes>
 
+                  </LabelsProvider>
+             </CommentsProvider>
           </AdminProvider>
          </SettingsProvider>
       </DashboardProvider>

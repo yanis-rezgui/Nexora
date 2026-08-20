@@ -16,6 +16,8 @@ import { createServer } from "http";
 import { initializeSocket } from "./socket/socket.js";
 import helmet from "helmet"
 import adminRouter from "./routes/admin.routes.js";
+import commentRouter from "./routes/comment.routes.js";
+import labelRouter from "./routes/label.routes.js";
 
 const app = express()
 
@@ -44,6 +46,8 @@ app.use("/api/v1", notificationRouter);
 app.use("/api/v1", dashboardRouter);
 app.use("/api/v1", settingsRouter);
 app.use("/api/v1", adminRouter)
+app.use("/api/v1", commentRouter);
+app.use("/api/v1", labelRouter);
 
 
 app.use(errorMiddleware);

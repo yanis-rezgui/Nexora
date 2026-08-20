@@ -18,6 +18,8 @@ REFRESH_TOKEN_EXPIRATION,
 CLOUDINARY_API_KEY,
 CLOUDINARY_API_SECRET,
 CLOUDINARY_CLOUD_NAME,
+RESEND_API_KEY,
+CLIENT_URL
 } = process.env;
 
 
@@ -28,4 +30,4 @@ cloudinary.config({
 });
 
 
-export  {cloudinary};
+export  {cloudinary}; 
