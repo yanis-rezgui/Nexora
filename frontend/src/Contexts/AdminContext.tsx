@@ -163,7 +163,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingOverview(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/admin/dashboard", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/dashboard`, {
         method: "GET",
         credentials: "include",
       });
@@ -190,7 +190,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingAnalytics(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/admin/analytics", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/analytics`, {
         method: "GET",
         credentials: "include",
       });
@@ -229,7 +229,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       const queryString = query.toString();
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/users${queryString ? `?${queryString}` : ""}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/admin/users${queryString ? `?${queryString}` : ""}`,
         { method: "GET", credentials: "include" }
       );
 
@@ -257,7 +257,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingCurrentUser(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${userId}`, {
         method: "GET",
         credentials: "include",
       });
@@ -284,7 +284,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingUpdateUserRole(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}/role`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${userId}/role`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role }),
@@ -317,7 +317,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingSuspendUser(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}/suspend`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${userId}/suspend`, {
         method: "PATCH",
         credentials: "include",
       });
@@ -346,7 +346,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingUnsuspendUser(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}/unsuspend`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${userId}/unsuspend`, {
         method: "PATCH",
         credentials: "include",
       });
@@ -375,7 +375,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingSessions(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}/sessions`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${userId}/sessions`, {
         method: "GET",
         credentials: "include",
       });
@@ -402,7 +402,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingRevokeSessions(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}/sessions`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${userId}/sessions`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -439,7 +439,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       const queryString = query.toString();
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/projects${queryString ? `?${queryString}` : ""}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/admin/projects${queryString ? `?${queryString}` : ""}`,
         { method: "GET", credentials: "include" }
       );
 
@@ -468,7 +468,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       setLoadingDeletionImpact(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/projects/${projectId}/deletion-impact`,
+        `${import.meta.env.VITE_API_URL}/api/v1/admin/projects/${projectId}/deletion-impact`,
         { method: "GET", credentials: "include" }
       );
 
@@ -494,7 +494,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setLoadingDeleteProject(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/projects/${projectId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/projects/${projectId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -536,7 +536,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       const queryString = query.toString();
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/admin/tasks${queryString ? `?${queryString}` : ""}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/admin/tasks${queryString ? `?${queryString}` : ""}`,
         { method: "GET", credentials: "include" }
       );
 
