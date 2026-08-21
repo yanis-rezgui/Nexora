@@ -25,7 +25,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
       setLoadingOverview(true);
 
       const res = await fetch(
-        "http://localhost:5000/api/v1/dashboard/overview",
+        `${import.meta.env.VITE_API_URL}/api/v1/dashboard/overview`,
         {
           method: "GET",
           credentials: "include",

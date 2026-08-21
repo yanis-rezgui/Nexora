@@ -46,7 +46,7 @@ export const CommentsProvider = ({ children }: { children: React.ReactNode }) =>
       setLoadingComments(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/tasks/${taskId}/comments`,
+        `${import.meta.env.VITE_API_URL}/api/v1/tasks/${taskId}/comments`,
         { method: "GET", credentials: "include" }
       );
 
@@ -78,7 +78,7 @@ export const CommentsProvider = ({ children }: { children: React.ReactNode }) =>
       setLoadingCreateComment(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/tasks/${taskId}/comments`,
+        `${import.meta.env.VITE_API_URL}/api/v1/tasks/${taskId}/comments`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -115,7 +115,7 @@ export const CommentsProvider = ({ children }: { children: React.ReactNode }) =>
       setLoadingUpdateComment(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/comments/${commentId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/comments/${commentId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -150,7 +150,7 @@ export const CommentsProvider = ({ children }: { children: React.ReactNode }) =>
       setLoadingDeleteComment(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/comments/${commentId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/comments/${commentId}`,
         { method: "DELETE", credentials: "include" }
       );
 
