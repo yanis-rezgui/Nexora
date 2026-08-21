@@ -16,7 +16,7 @@ const socketAuth = async (socket, next) => {
 
     const cookies = socket.handshake.headers.cookie;
 
-    console.log("Cookies:", cookies);
+  //  console.log("Cookies:", cookies);
 
     if (!cookies) {
       console.log("No cookies");
@@ -33,7 +33,7 @@ const socketAuth = async (socket, next) => {
       .find((cookie) => cookie.startsWith("accessToken="))
       ?.split("=")[1];
 
-    console.log("Access token:", accessToken ? "Present" : "Missing");
+    //console.log("Access token:", accessToken ? "Present" : "Missing");
 
     if (!accessToken) {
       console.log("No access token");
@@ -50,7 +50,7 @@ const socketAuth = async (socket, next) => {
       ACCESS_TOKEN_SECRET
     );
 
-    console.log("Decoded token:", decoded);
+    //console.log("Decoded token:", decoded);
 
 
     // ============================================================
@@ -63,7 +63,7 @@ const socketAuth = async (socket, next) => {
       },
     });
 
-    console.log("User:", user?.id);
+    //console.log("User:", user?.id);
 
 
     if (!user) {
@@ -83,9 +83,11 @@ const socketAuth = async (socket, next) => {
     // 6. AUTHENTICATION SUCCESS
     // ============================================================
 
+    /*
     console.log(
       `Socket authenticated successfully: ${user.firstName} ${user.lastName}`
     );
+    */
 
     next();
 
