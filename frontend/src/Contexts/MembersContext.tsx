@@ -86,7 +86,7 @@ export const MembersProvider = ({
       setLoadingMembers(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/members`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/members`,
         {
           method: "GET",
           credentials: "include",
@@ -142,7 +142,7 @@ export const MembersProvider = ({
       setLoadingAddMember(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/members`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/members`,
         {
           method: "POST",
 
@@ -207,7 +207,7 @@ export const MembersProvider = ({
       setLoadingUpdateMemberRole(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/members/${memberId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/members/${memberId}`,
         {
           method: "PATCH",
 
@@ -280,7 +280,7 @@ export const MembersProvider = ({
       setLoadingRemoveMember(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/members/${memberId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/members/${memberId}`,
         {
           method: "DELETE",
           credentials: "include",

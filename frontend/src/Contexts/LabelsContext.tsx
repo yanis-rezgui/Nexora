@@ -62,7 +62,7 @@ export const LabelsProvider = ({ children }: { children: React.ReactNode }) => {
       setLoadingProjectLabels(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/labels`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/labels`,
         { method: "GET", credentials: "include" }
       );
 
@@ -89,7 +89,7 @@ export const LabelsProvider = ({ children }: { children: React.ReactNode }) => {
       setLoadingCreateLabel(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/labels`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/labels`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -124,7 +124,7 @@ export const LabelsProvider = ({ children }: { children: React.ReactNode }) => {
       setLoadingUpdateLabel(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/labels/${labelId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/labels/${labelId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -164,7 +164,7 @@ export const LabelsProvider = ({ children }: { children: React.ReactNode }) => {
       setLoadingDeleteLabel(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/labels/${labelId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/labels/${labelId}`,
         { method: "DELETE", credentials: "include" }
       );
 
@@ -204,7 +204,7 @@ export const LabelsProvider = ({ children }: { children: React.ReactNode }) => {
       setLoadingAttachLabel(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/tasks/${taskId}/labels`,
+        `${import.meta.env.VITE_API_URL}/api/v1/tasks/${taskId}/labels`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -236,7 +236,7 @@ export const LabelsProvider = ({ children }: { children: React.ReactNode }) => {
       setLoadingDetachLabel(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/tasks/${taskId}/labels/${labelId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/tasks/${taskId}/labels/${labelId}`,
         { method: "DELETE", credentials: "include" }
       );
 

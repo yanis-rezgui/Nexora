@@ -51,7 +51,7 @@ const [loadingResetPassword, setLoadingResetPassword] = useState<boolean>(false)
         try{
 
             setLoadingLogin(true)
-            const res = await fetch('http://localhost:5000/api/v1/auth/login', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
                 method : "POST",
                 headers : {
                     "Content-Type" : "application/json",
@@ -83,7 +83,7 @@ const [loadingResetPassword, setLoadingResetPassword] = useState<boolean>(false)
         try{
 
             setLoadingSignUp(true)
-            const res = await fetch("http://localhost:5000/api/v1/auth/sign-up", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/sign-up`, {
                 method : "POST",
                 headers : {
                     "Content-Type" : "application/json"
@@ -114,7 +114,7 @@ const [loadingResetPassword, setLoadingResetPassword] = useState<boolean>(false)
         try{
 
             setLoadingSignOut(true);
-            const res = await fetch("http://localhost:5000/api/v1/auth/logout", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, {
                 method : "POST",
                 headers : {
                     "Content-Type" : "application/json"
@@ -147,7 +147,7 @@ const [loadingResetPassword, setLoadingResetPassword] = useState<boolean>(false)
 
             setLoadingUser(true);
 
-            const res = await fetch("http://localhost:5000/api/v1/auth/me", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
                 method : "GET",
                 credentials : "include"
             });
@@ -173,7 +173,7 @@ const [loadingResetPassword, setLoadingResetPassword] = useState<boolean>(false)
     try {
         setLoadingForgotPassword(true);
 
-        const res = await fetch("http://localhost:5000/api/v1/auth/forgot-password", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/forgot-password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email }),
@@ -208,7 +208,7 @@ const resetPassword = async (
     try {
         setLoadingResetPassword(true);
 
-        const res = await fetch("http://localhost:5000/api/v1/auth/reset-password", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/reset-password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token, password, confirmPassword }),

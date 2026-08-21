@@ -239,7 +239,7 @@ export const TasksProvider = ({
       setLoadingTasks(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/tasks`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/tasks`,
         {
           method: "GET",
           credentials: "include",
@@ -313,7 +313,7 @@ export const TasksProvider = ({
       const queryString = query.toString();
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/tasks/my${queryString ? `?${queryString}` : ""}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/tasks/my${queryString ? `?${queryString}` : ""}`,
         {
           method: "GET",
           credentials: "include",
@@ -369,7 +369,7 @@ export const TasksProvider = ({
       setLoadingCreateTask(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/tasks`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/tasks`,
         {
           method: "POST",
 
@@ -435,7 +435,7 @@ export const TasksProvider = ({
       setLoadingCurrentTask(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/tasks/${taskId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,
         {
           method: "GET",
           credentials: "include",
@@ -490,7 +490,7 @@ export const TasksProvider = ({
       setLoadingUpdateTask(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/tasks/${taskId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,
         {
           method: "PATCH",
 
@@ -581,7 +581,7 @@ export const TasksProvider = ({
       setLoadingDeleteTask(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/tasks/${taskId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -649,7 +649,7 @@ export const TasksProvider = ({
       setLoadingAssignTask(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/tasks/${taskId}/assign`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/tasks/${taskId}/assign`,
         {
           method: "PATCH",
 
@@ -741,7 +741,7 @@ export const TasksProvider = ({
       setLoadingUpdateTaskStatus(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects/${projectId}/tasks/${taskId}/status`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}/tasks/${taskId}/status`,
         {
           method: "PATCH",
 

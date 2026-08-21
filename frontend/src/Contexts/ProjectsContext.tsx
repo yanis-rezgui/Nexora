@@ -75,7 +75,7 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
       const queryString = query.toString();
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/projects${queryString ? `?${queryString}` : ""}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/projects${queryString ? `?${queryString}` : ""}`,
         {
           method: "GET",
           credentials: "include",
@@ -107,7 +107,7 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingCreateProject(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/projects", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/projects`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +139,7 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingCurrentProject(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/projects/${projectId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}`, {
         method: "GET",
         credentials: "include",
       });
@@ -170,7 +170,7 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingUpdateProject(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/projects/${projectId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +211,7 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingDeleteProject(true);
 
-      const res = await fetch(`http://localhost:5000/api/v1/projects/${projectId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/projects/${projectId}`, {
         method: "DELETE",
         credentials: "include",
       });

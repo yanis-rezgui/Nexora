@@ -54,7 +54,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingUpdateProfile(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/settings/profile", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/settings/profile`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName }),
@@ -91,7 +91,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingUpdatePassword(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/settings/password", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/settings/password`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ currentPassword, newPassword1, newPassword2 }),
@@ -124,7 +124,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingPreferences(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/settings/notifications", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/settings/notifications`, {
         method: "GET",
         credentials: "include",
       });
@@ -155,7 +155,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingUpdatePreferences(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/settings/notifications", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/settings/notifications`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(changes),
@@ -185,7 +185,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     try {
       setLoadingDeleteAccount(true);
 
-      const res = await fetch("http://localhost:5000/api/v1/settings/account", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/settings/account`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),

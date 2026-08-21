@@ -107,7 +107,7 @@ export const NotificationsProvider = ({
       const queryString = query.toString();
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/notifications${queryString ? `?${queryString}` : ""}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/notifications${queryString ? `?${queryString}` : ""}`,
         {
           method: "GET",
           credentials: "include",
@@ -160,7 +160,7 @@ export const NotificationsProvider = ({
       setLoadingUnreadCount(true);
 
       const res = await fetch(
-        "http://localhost:5000/api/v1/notifications/unread-count",
+        `${import.meta.env.VITE_API_URL}/api/v1/notifications/unread-count`,
         {
           method: "GET",
           credentials: "include",
@@ -200,7 +200,7 @@ export const NotificationsProvider = ({
       setLoadingMarkAsRead(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/notifications/${notificationId}/read`,
+        `${import.meta.env.VITE_API_URL}/api/v1/notifications/${notificationId}/read`,
         {
           method: "PATCH",
           credentials: "include",
@@ -257,7 +257,7 @@ export const NotificationsProvider = ({
       setLoadingMarkAllAsRead(true);
 
       const res = await fetch(
-        "http://localhost:5000/api/v1/notifications/read-all",
+        `${import.meta.env.VITE_API_URL}/api/v1/notifications/read-all`,
         {
           method: "PATCH",
           credentials: "include",
@@ -314,7 +314,7 @@ export const NotificationsProvider = ({
       setLoadingDeleteNotification(true);
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/notifications/${notificationId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/notifications/${notificationId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -373,7 +373,7 @@ export const NotificationsProvider = ({
       const query = onlyRead ? "?onlyRead=true" : "";
 
       const res = await fetch(
-        `http://localhost:5000/api/v1/notifications${query}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/notifications${query}`,
         {
           method: "DELETE",
           credentials: "include",
